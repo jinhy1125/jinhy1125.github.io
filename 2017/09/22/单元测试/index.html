@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="一、我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  二、最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 三、常用注解1 BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较">
+<meta name="description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
 <meta name="keywords" content="单元测试,JUnit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单元测试">
 <meta property="og:url" content="http://yoursite.com/2017/09/22/单元测试/index.html">
 <meta property="og:site_name" content="jinhy&#39;s club">
-<meta property="og:description" content="一、我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  二、最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 三、常用注解1 BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较">
+<meta property="og:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-22T08:26:05.593Z">
+<meta property="og:updated_time" content="2017-09-22T08:28:58.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单元测试">
-<meta name="twitter:description" content="一、我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  二、最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 三、常用注解1 BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较">
+<meta name="twitter:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
 
 
 
@@ -378,24 +378,24 @@
       
 
       
-        <h2 id="一、我们为什么要做单元测试"><a href="#一、我们为什么要做单元测试" class="headerlink" title="一、我们为什么要做单元测试"></a>一、我们为什么要做单元测试</h2><ul>
+        <h2 id="我们为什么要做单元测试"><a href="#我们为什么要做单元测试" class="headerlink" title="我们为什么要做单元测试"></a>我们为什么要做单元测试</h2><ul>
 <li>减少查错时间</li>
 <li>提高代码质量</li>
 <li>更易重构维护</li>
 </ul>
-<h2 id="二、最佳实践"><a href="#二、最佳实践" class="headerlink" title="二、最佳实践"></a>二、最佳实践</h2><p>测试方法必须使用public void 进行修饰，不能带任何的参数<br>测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖</p>
-<h2 id="三、常用注解"><a href="#三、常用注解" class="headerlink" title="三、常用注解"></a>三、常用注解</h2><h3 id="1-BeforeClass和AfterClass"><a href="#1-BeforeClass和AfterClass" class="headerlink" title="1 BeforeClass和AfterClass"></a>1 BeforeClass和AfterClass</h3><p>@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件。</p>
+<h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>测试方法必须使用public void 进行修饰，不能带任何的参数<br>测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖</p>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><h3 id="BeforeClass和AfterClass"><a href="#BeforeClass和AfterClass" class="headerlink" title="BeforeClass和AfterClass"></a>BeforeClass和AfterClass</h3><p>@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件。</p>
 <p>@AfterClass所修饰的方法通常用来对资源的清理，如关闭数据库连接</p>
 <p>它们只会被调用一次</p>
-<h3 id="2-Before和After"><a href="#2-Before和After" class="headerlink" title="2 Before和After"></a>2 Before和After</h3><p>@Before和@After会在每个测试方法前后各执行一次</p>
-<h3 id="3-RunWith"><a href="#3-RunWith" class="headerlink" title="3 RunWith"></a>3 RunWith</h3><p>@RunWith决定用哪种runner运行测试方法</p>
-<h4 id="3-1-Suite（测试套件）"><a href="#3-1-Suite（测试套件）" class="headerlink" title="3.1 Suite（测试套件）"></a>3.1 Suite（测试套件）</h4><p>测试套件就是组织测试哪些类一起运行的，注意测试套件是个空类，由以下注解修饰</p>
+<h3 id="Before和After"><a href="#Before和After" class="headerlink" title="Before和After"></a>Before和After</h3><p>@Before和@After会在每个测试方法前后各执行一次</p>
+<h3 id="RunWith"><a href="#RunWith" class="headerlink" title="RunWith"></a>RunWith</h3><p>@RunWith决定用哪种runner运行测试方法</p>
+<h4 id="Suite（测试套件）"><a href="#Suite（测试套件）" class="headerlink" title="Suite（测试套件）"></a>Suite（测试套件）</h4><p>测试套件就是组织测试哪些类一起运行的，注意测试套件是个空类，由以下注解修饰</p>
 <p>@RunWith(Suite.class)<br>@Suite.SuiteClasses({XX1.class,XX2.class})</p>
-<h4 id="3-2-参数化设置"><a href="#3-2-参数化设置" class="headerlink" title="3.2 参数化设置"></a>3.2 参数化设置</h4><p>用于多组数据的测试<br>@RunWith(Parameterized.class)</p>
-<h2 id="四、怎么写用例，针对场景还是类。"><a href="#四、怎么写用例，针对场景还是类。" class="headerlink" title="四、怎么写用例，针对场景还是类。"></a>四、怎么写用例，针对场景还是类。</h2><p>测试用例不是用来证明你是对的，而是用来证明你没有错</p>
+<h4 id="参数化设置"><a href="#参数化设置" class="headerlink" title="参数化设置"></a>参数化设置</h4><p>用于多组数据的测试<br>@RunWith(Parameterized.class)</p>
+<h2 id="怎么写用例，针对场景还是类。"><a href="#怎么写用例，针对场景还是类。" class="headerlink" title="怎么写用例，针对场景还是类。"></a>怎么写用例，针对场景还是类。</h2><p>测试用例不是用来证明你是对的，而是用来证明你没有错</p>
 <p>测试用例用来达到想要的预期结果，但是对于逻辑的错误无能为力？</p>
 <p>今天第一次写单元测试，本来想套用外训老师的方式，用场景的方式写测试用例，但是发现遇到了不少问题，然后换用层层递进的进行单元测试，从最底层开始，后面mock相关的依赖。</p>
-<h2 id="五、小结"><a href="#五、小结" class="headerlink" title="五、小结"></a>五、小结</h2><p>有点儿小困，明天再整理吧。<br>知道了一些基础，其实我更想知道一些复杂场景应该怎么写测试用例。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>有点儿小困，明天再整理吧。<br>知道了一些基础，其实我更想知道一些复杂场景应该怎么写测试用例。</p>
 
       
     </div>
@@ -636,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、我们为什么要做单元测试"><span class="nav-number">1.</span> <span class="nav-text">一、我们为什么要做单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、最佳实践"><span class="nav-number">2.</span> <span class="nav-text">二、最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、常用注解"><span class="nav-number">3.</span> <span class="nav-text">三、常用注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-BeforeClass和AfterClass"><span class="nav-number">3.1.</span> <span class="nav-text">1 BeforeClass和AfterClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-Before和After"><span class="nav-number">3.2.</span> <span class="nav-text">2 Before和After</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-RunWith"><span class="nav-number">3.3.</span> <span class="nav-text">3 RunWith</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#3-1-Suite（测试套件）"><span class="nav-number">3.3.1.</span> <span class="nav-text">3.1 Suite（测试套件）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-2-参数化设置"><span class="nav-number">3.3.2.</span> <span class="nav-text">3.2 参数化设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、怎么写用例，针对场景还是类。"><span class="nav-number">4.</span> <span class="nav-text">四、怎么写用例，针对场景还是类。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#五、小结"><span class="nav-number">5.</span> <span class="nav-text">五、小结</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#我们为什么要做单元测试"><span class="nav-number">1.</span> <span class="nav-text">我们为什么要做单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#最佳实践"><span class="nav-number">2.</span> <span class="nav-text">最佳实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#常用注解"><span class="nav-number">3.</span> <span class="nav-text">常用注解</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#BeforeClass和AfterClass"><span class="nav-number">3.1.</span> <span class="nav-text">BeforeClass和AfterClass</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Before和After"><span class="nav-number">3.2.</span> <span class="nav-text">Before和After</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RunWith"><span class="nav-number">3.3.</span> <span class="nav-text">RunWith</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Suite（测试套件）"><span class="nav-number">3.3.1.</span> <span class="nav-text">Suite（测试套件）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#参数化设置"><span class="nav-number">3.3.2.</span> <span class="nav-text">参数化设置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#怎么写用例，针对场景还是类。"><span class="nav-number">4.</span> <span class="nav-text">怎么写用例，针对场景还是类。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">5.</span> <span class="nav-text">小结</span></a></li></ol></div>
             
 
           </div>
