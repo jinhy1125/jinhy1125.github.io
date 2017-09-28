@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
+<meta name="description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解">
 <meta name="keywords" content="单元测试,JUnit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="单元测试">
 <meta property="og:url" content="http://yoursite.com/2017/09/22/单元测试/index.html">
 <meta property="og:site_name" content="jinhy&#39;s club">
-<meta property="og:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
+<meta property="og:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-09-22T08:28:58.425Z">
+<meta property="og:updated_time" content="2017-09-28T14:49:22.234Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="单元测试">
-<meta name="twitter:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解BeforeClass和AfterClass@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件">
+<meta name="twitter:description" content="我们为什么要做单元测试 减少查错时间 提高代码质量 更易重构维护  最佳实践测试方法必须使用public void 进行修饰，不能带任何的参数测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖 常用注解">
 
 
 
@@ -384,7 +384,8 @@
 <li>更易重构维护</li>
 </ul>
 <h2 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h2><p>测试方法必须使用public void 进行修饰，不能带任何的参数<br>测试单元中的每个方法必须可以独立测试，测试方法间不能有任何的依赖</p>
-<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><h3 id="BeforeClass和AfterClass"><a href="#BeforeClass和AfterClass" class="headerlink" title="BeforeClass和AfterClass"></a>BeforeClass和AfterClass</h3><p>@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件。</p>
+<h2 id="常用注解"><a href="#常用注解" class="headerlink" title="常用注解"></a>常用注解</h2><a id="more"></a>
+<h3 id="BeforeClass和AfterClass"><a href="#BeforeClass和AfterClass" class="headerlink" title="BeforeClass和AfterClass"></a>BeforeClass和AfterClass</h3><p>@BeforeClass修饰的方法会在所有方法被调用前被执行，而且该方法是静态的，所以当测试类被加载后接着就会运行它，它比较适合加载配置文件。</p>
 <p>@AfterClass所修饰的方法通常用来对资源的清理，如关闭数据库连接</p>
 <p>它们只会被调用一次</p>
 <h3 id="Before和After"><a href="#Before和After" class="headerlink" title="Before和After"></a>Before和After</h3><p>@Before和@After会在每个测试方法前后各执行一次</p>
