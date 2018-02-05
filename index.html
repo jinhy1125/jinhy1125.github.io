@@ -391,7 +391,9 @@
 <p>然而还是有些缺点，比如Redis单线程的设计无法利用好CPU资源，尤其在现今服务器动不动就24核32核的情况下。<br>基于内存Redis在内存使用量巨大时，管理和维护十分的困难和低效。<br>等等。</p>
 <p>*上面的问题可以使用单机多示例Redis然后采用客户端分片的模式解决。</p>
 <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><blockquote>
-<p>思考：数据库什么情况下要分库？<br>
+<p>思考：数据库什么情况下要分库？</p>
+</blockquote>
+<p>分库分表就是把原本存储在一个库的数据分块存储到多个库上，把原本存储于一个表的数据分块存储到多个表上。<br>
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2018/02/05/redis探索/#more" rel="contents">
