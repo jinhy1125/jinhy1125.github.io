@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="WEB服务器,Nginx," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="背景Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。 关于本文的内容及顺序最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服">
+<meta name="keywords" content="WEB服务器,Nginx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx入门">
+<meta property="og:url" content="http://yoursite.com/2017/05/03/Nginx/index.html">
+<meta property="og:site_name" content="jinhy&#39;s club">
+<meta property="og:description" content="背景Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。 关于本文的内容及顺序最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2017/05/03/Nginx/images/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/05/03/Nginx/images/v2-816f7595d80b7ef36bf958764a873cba_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/05/03/Nginx/images/480c1c45d2565e2f92fd930d25b73a18_r.jpg">
+<meta property="og:image" content="http://yoursite.com/2017/05/03/Nginx/images/1240">
+<meta property="og:updated_time" content="2018-05-03T10:29:07.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nginx入门">
+<meta name="twitter:description" content="背景Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。 关于本文的内容及顺序最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服">
+<meta name="twitter:image" content="http://yoursite.com/2017/05/03/Nginx/images/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/05/03/Nginx/"/>
+
+
+
+
+
+  <title>Nginx入门 | jinhy's club</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jinhy's club</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/03/Nginx/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinhy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jinhy's club">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Nginx入门</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-03T18:16:37+08:00">
+                2017-05-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/" itemprop="url" rel="index">
+                    <span itemprop="name">学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/WEB服务器/" itemprop="url" rel="index">
+                    <span itemprop="name">WEB服务器</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/WEB服务器/Nginx/" itemprop="url" rel="index">
+                    <span itemprop="name">Nginx</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。</p>
+<h3 id="关于本文的内容及顺序"><a href="#关于本文的内容及顺序" class="headerlink" title="关于本文的内容及顺序"></a>关于本文的内容及顺序</h3><p>最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服务器啊，那有什么区别呢？我们平常开发的时候经常用的不就是Tomcat么，为啥没用Nginx；而且负载均衡为啥要用Nginx；当然还有反向代理。因为疑问太多了，所以这篇文章不会立即进入主题，而是一步步额抠概念，最终达成使用并理解Nginx的目的。<br><a id="more"></a></p>
+<h2 id="引子一-Web服务器"><a href="#引子一-Web服务器" class="headerlink" title="引子一 Web服务器"></a>引子一 Web服务器</h2><h3 id="什么是服务器（server）？"><a href="#什么是服务器（server）？" class="headerlink" title="什么是服务器（server）？"></a>什么是服务器（server）？</h3><p>一般来说，server有两重意思</p>
+<ol>
+<li>有时候server标识硬件，即一台机器。它还有另一个名字：「主机」。</li>
+<li>更多的时候，server表示软件程序，这种程序主要用来对外提供某些些服务，比如邮件服务、FTP服务、数据库服务、网页服务等。</li>
+</ol>
+<p>作为开发者，我们说server的时候，一般指的后者，也就是一个24小时运行的软件程序。而一台主机上面可以运行多个这个服务，一个服务也可以运行在多个主机上。</p>
+<h3 id="什么是Web-Server？"><a href="#什么是Web-Server？" class="headerlink" title="什么是Web Server？"></a>什么是Web Server？</h3><p>顾名思义，Web Server就是提供Web服务的Server。</p>
+<p>比如我们访问<code>http://www.baidu.com</code>，其实就是在使用百度的Server提供的服务。</p>
+<p>一般来说，Web Server对外提供HTTP服务（也可以是其他的服务）。</p>
+<p>如何提供HTTP服务？</p>
+<p>下面是用<code>Node.js</code>写的一个最简单的HTTP Server</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> http = <span class="built_in">require</span>(<span class="string">'http'</span>)</div><div class="line"><span class="keyword">var</span> server = http.createServer(<span class="function"><span class="keyword">function</span>(<span class="params">request,response</span>)</span>&#123;</div><div class="line">    response.end(<span class="string">'这是页面内容，你请求的路径是：'</span> + request.url)</div><div class="line">&#125;)</div><div class="line">server.listen(<span class="number">8080</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">    <span class="built_in">console</span>.log(<span class="string">"正在监听 %s 端口"</span>, <span class="number">8080</span>);</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p>你不用看懂这段代码，你只需要知道两件事：</p>
+<ol>
+<li>这段程序监听了当前机器的8080端口</li>
+<li>一旦外部访问当前机器的8080端口，这段程序就会返回一段文字。</li>
+</ol>
+<p>这就是一个最简单的HTTP Server。</p>
+<h2 id="引子二-Web服务器与应用服务器的区别"><a href="#引子二-Web服务器与应用服务器的区别" class="headerlink" title="引子二 Web服务器与应用服务器的区别"></a>引子二 Web服务器与应用服务器的区别</h2><p>在大多数时候，Web服务器和应用服务器这两个术语是可以互换使用的。</p>
+<p>以下是Web服务器和应用服务器在特性上的一些关键的差异：</p>
+<ul>
+<li>Web服务器的设计目的是提供HTTP服务；应用服务器也可以提供HTTP服务，但不限于HTTP，他还可以提供其他协议的支持，如RMI/RPC。</li>
+<li>Web服务器主要是为提供静态内容而设计的，不过大多数Web服务器都有插件来支持脚本语言，比如Perl、PHP、ASP、JSP等，通过这些插件，这些服务器就也可以生成动态地HTTP内容。</li>
+<li>大多数应用服务器都将Web服务器作为其不可分割的一部分，这意味着应用服务器可以做任何Web服务器所能做的事情。此外，应用服务器有组件和特性来支持应用级服务，如连接池、对象池、事务支持、消息传递服务等。</li>
+<li>由于Web服务器非常适合用于提供静态内容，而应用服务器适合提供动态内容，因此大多数生产环境都有Web服务器充当应用服务器的反向代理。这意味着在页面请求时，Web服务器会通过提供静态内容（如图像/静态HTML）来解释请求，并且它还会使用某种过滤技术（主要是请求资源的扩展）识别动态内容请求，并透明地转发到应用服务器。</li>
+</ul>
+<p>Web服务器包括Nginx、Apache、IIS等。</p>
+<p>应用服务器包括WebLogic、JBoss、Tomcat等。</p>
+<h2 id="引子三-正向代理和反向代理"><a href="#引子三-正向代理和反向代理" class="headerlink" title="引子三 正向代理和反向代理"></a>引子三 正向代理和反向代理</h2><h3 id="正向代理"><a href="#正向代理" class="headerlink" title="正向代理"></a>正向代理</h3><p>A同学想要创业但是缺少资金，所以决定向马云爸爸借钱，可是没能成功。通过打探了一番消息，原来A同学的大学老师王老师是马云的同学，于是A同学请求王老师帮忙向马云借款。最后终于成功了马云把钱借给了王老师，并由王老师把钱交到了A同学手上。</p>
+<p>在上面是故事中，王老师扮演了一个非常关键的角色，即<strong>代理</strong>，也可以说是正向代理。王老师代替A同学办这件事，这个过程中真正借钱的人是谁，马云是不知道的，这点非常关键。</p>
+<p>我们常说的代理也就是指正向代理。在正向代理的过程中，它隐藏了真实的请求客户端，服务端不知道真实的客户端是谁，客户端请求的服务都被代理服务器代替来请求。</p>
+<p>某些科学上网工具扮演的就是典型的正向代理角色。用浏览器访问<code>http://www.google.com</code>是时，被残忍的block，于是你可以在国外搭建一台代理服务器，让代理帮我去请求google.com，代理把请求返回的相应结构返回给我。</p>
+<p><img src="images\v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg" alt="正向代理"></p>
+<h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>大家都有过这样的经历吧，拨打10086的客服电话，一个地区的客服有几个或者几十个，你永远不会关心电话另一头的客服到底是哪一个，你关心的只是问题能不能得到专业的解答，而你总能得到解答。这里的10086总机号码就是我们说的<strong>反向代理</strong>。客户不知道真正提供服务的人是谁。</p>
+<p>反向代理隐藏了真实的服务端，当我们请求<code>http://wwww.baidu.com</code>的时候，就像拨打10086一样，背后可能有成千上万台服务器为我们服务，但是具体是哪一台，你并不需要知道，你只需要知道反向代理服务器是谁就好了，<code>http://www.baidu.com</code>就是我们的反向代理服务器，反向代理服务器会帮我们把请求转发到真是的服务器那里去。Nginx就是性能非常好的反向代理服务器，用来做负载均衡。</p>
+<p><img src="images\v2-816f7595d80b7ef36bf958764a873cba_hd.jpg" alt="反向代理"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>两者的区别在于代理的对象不一样</p>
+<ul>
+<li>正向代理，代理的对象是客户端</li>
+<li>反向代理，代理的对象是服务端</li>
+</ul>
+<p>模型如下：</p>
+<p><img src="images\480c1c45d2565e2f92fd930d25b73a18_r.jpg" alt="模型"></p>
+<p>又看到一个比较全面的图，也贴上吧。。。</p>
+<p><img src="images\1240" alt="正向代理和反向代理"></p>
+<h2 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h2><p>Nginx是俄罗斯人Igor Sysoev编写的十分轻量级的HTTP服务器（Web服务器）。它是一个高性能的HTTP和反向代理服务器，同时也是一个IMAP/POP3/SMTP代理服务器。</p>
+<p>Nginx以<code>事件驱动</code>的方式编写，所以有非常好的性能，同时也是一个非常高效的反向代理、负载均衡。其拥有匹配Lighttpd的性能，同时还没有Lighttpd的内存泄漏问题。</p>
+<p>Nginx因为它的稳定性、丰富的模块库、灵活的配置和低系统资源的消耗而闻名。对proxy和rewrite模块支持的很彻底，还支持mod_fcgi、ssl、vhosts，适合用来做mongrel clusters的前端HTTP响应。</p>
+<h2 id="Nginx入门"><a href="#Nginx入门" class="headerlink" title="Nginx入门"></a>Nginx入门</h2><h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>nginx的发布版本分为<code>Linux</code>和<code>windods</code>版本。</p>
+<p>也可以下载源码，编译后运行。</p>
+<h4 id="从源代码编译Nginx"><a href="#从源代码编译Nginx" class="headerlink" title="从源代码编译Nginx"></a>从源代码编译Nginx</h4><p>把源码解压缩之后，在终端里运行如下命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ ./configure</div><div class="line">$ make</div><div class="line">$ sudo make install</div></pre></td></tr></table></figure>
+<p>默认情况下，Nginx会被安装在<code>/usr/local/nginx</code>。通过设定编译选项可以改变这个设定。</p>
+<h4 id="Window安装"><a href="#Window安装" class="headerlink" title="Window安装"></a>Window安装</h4><p>下载解压后，到其目录下打开命令行直接执行<code>start nginx</code>即可。（不要直接双击启动，会失去控制）</p>
+<h3 id="命令"><a href="#命令" class="headerlink" title="命令"></a>命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>nginx -s stop</td>
+<td>快速关闭Nginx，可能不保存相关信息，并迅速终止web服务。</td>
+</tr>
+<tr>
+<td>nginx -s quit</td>
+<td>平稳关闭Nginx，保存相关信息，有安排的结束web服务。</td>
+</tr>
+<tr>
+<td>nginx -s reload</td>
+<td>因改变了Nginx相关配置，需要重新加载配置而重载。</td>
+</tr>
+<tr>
+<td>nginx -s reopen</td>
+<td>重新打开日志文件。</td>
+</tr>
+<tr>
+<td>nginx -c filename</td>
+<td>为Nginx指定一个配置文件来代替缺省的。</td>
+</tr>
+<tr>
+<td>nginx -t</td>
+<td>不运行，测试配置文件。</td>
+</tr>
+<tr>
+<td>nginx -v</td>
+<td>显示nginx的版本。</td>
+</tr>
+<tr>
+<td>nginx -V</td>
+<td>显示nginx的版本，编译器版本和配置参数。</td>
+</tr>
+</tbody>
+</table>
+<h3 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h3><p>通过以下各种具体配置来总结归纳。</p>
+<h4 id="反向代理-1"><a href="#反向代理-1" class="headerlink" title="反向代理"></a>反向代理</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#运行用户</span></div><div class="line"><span class="comment">#user somebody;</span></div><div class="line"></div><div class="line"><span class="comment">#启动进程,通常设置成和cpu的数量相等</span></div><div class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="comment">#全局错误日志</span></div><div class="line"><span class="attribute">error_log</span>  D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/logs/error.log;</div><div class="line"><span class="attribute">error_log</span>  D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/logs/notice.log  <span class="literal">notice</span>;</div><div class="line"><span class="attribute">error_log</span>  D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/logs/info.log  <span class="literal">info</span>;</div><div class="line"></div><div class="line"><span class="comment">#PID文件，记录当前启动的nginx的进程ID</span></div><div class="line"><span class="attribute">pid</span>        D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/logs/nginx.pid;</div><div class="line"></div><div class="line"><span class="comment">#工作模式及连接数上限</span></div><div class="line"><span class="section">events</span> &#123;</div><div class="line">    <span class="attribute">worker_connections</span> <span class="number">1024</span>;    <span class="comment">#单个后台worker process进程的最大并发链接数</span></div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">#设定http服务器，利用它的反向代理功能提供负载均衡支持</span></div><div class="line"><span class="section">http</span> &#123;</div><div class="line">    <span class="comment">#设定mime类型(邮件支持类型),类型由mime.types文件定义</span></div><div class="line">    <span class="attribute">include</span>       D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/conf/mime.types;</div><div class="line">    <span class="attribute">default_type</span>  application/octet-stream;</div><div class="line">    </div><div class="line">    <span class="comment">#设定日志</span></div><div class="line">    <span class="attribute">log_format</span>  main  <span class="string">'[<span class="variable">$remote_addr</span>] - [<span class="variable">$remote_user</span>] [<span class="variable">$time_local</span>] "<span class="variable">$request</span>" '</span></div><div class="line">                      <span class="string">'<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> "<span class="variable">$http_referer</span>" '</span></div><div class="line">                      <span class="string">'"<span class="variable">$http_user_agent</span>" "<span class="variable">$http_x_forwarded_for</span>"'</span>;</div><div class="line">                      </div><div class="line">    <span class="attribute">access_log</span>    D:/Tools/nginx-<span class="number">1</span>.<span class="number">10</span>.<span class="number">1</span>/logs/access.log main;</div><div class="line">    <span class="attribute">rewrite_log</span>     <span class="literal">on</span>;</div><div class="line">    </div><div class="line">    <span class="comment">#sendfile 指令指定 nginx 是否调用 sendfile 函数（zero copy 方式）来输出文件，对于普通应用，</span></div><div class="line">    <span class="comment">#必须设为 on,如果用来进行下载等应用磁盘IO重负载应用，可设置为 off，以平衡磁盘与网络I/O处理速度，降低系统的uptime.</span></div><div class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</div><div class="line">    <span class="comment">#tcp_nopush     on;</span></div><div class="line"></div><div class="line">    <span class="comment">#连接超时时间</span></div><div class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">120</span>;</div><div class="line">    <span class="attribute">tcp_nodelay</span>        <span class="literal">on</span>;</div><div class="line">    </div><div class="line">    <span class="comment">#gzip压缩开关</span></div><div class="line">    <span class="comment">#gzip  on;</span></div><div class="line"> </div><div class="line">    <span class="comment">#设定实际的服务器列表 </span></div><div class="line">    <span class="attribute">upstream</span> zp_server1&#123;</div><div class="line">        <span class="attribute">server</span> <span class="number">127.0.0.1:8089</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">#HTTP服务器</span></div><div class="line">    <span class="section">server</span> &#123;</div><div class="line">        <span class="comment">#监听80端口，80端口是知名端口号，用于HTTP协议</span></div><div class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</div><div class="line">        </div><div class="line">        <span class="comment">#定义使用www.xx.com访问</span></div><div class="line">        <span class="attribute">server_name</span>  www.helloworld.com;</div><div class="line">        </div><div class="line">        <span class="comment">#首页</span></div><div class="line">        <span class="attribute">index</span> index.html</div><div class="line">        </div><div class="line">        <span class="comment">#指向webapp的目录</span></div><div class="line">        root D:\01_Workspace\Project\github\zp\SpringNotes\spring-security\spring-shiro\src\main\webapp;</div><div class="line">        </div><div class="line">        <span class="comment">#编码格式</span></div><div class="line">        <span class="attribute">charset</span> utf-<span class="number">8</span>;</div><div class="line">        </div><div class="line">        <span class="comment">#代理配置参数</span></div><div class="line">        <span class="attribute">proxy_connect_timeout</span> <span class="number">180</span>;</div><div class="line">        <span class="attribute">proxy_send_timeout</span> <span class="number">180</span>;</div><div class="line">        <span class="attribute">proxy_read_timeout</span> <span class="number">180</span>;</div><div class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</div><div class="line">        <span class="attribute">proxy_set_header</span> X-Forwarder-For <span class="variable">$remote_addr</span>;</div><div class="line"></div><div class="line">        <span class="comment">#反向代理的路径（和upstream绑定），location 后面设置映射的路径</span></div><div class="line">        <span class="attribute">location</span> / &#123;</div><div class="line">            <span class="attribute">proxy_pass</span> http://zp_server1;</div><div class="line">        &#125; </div><div class="line"></div><div class="line">        <span class="comment">#静态文件，nginx自己处理</span></div><div class="line">        <span class="attribute">location</span> <span class="regexp">~ ^/(images|javascript|js|css|flash|media|static)/</span> &#123;</div><div class="line">            <span class="attribute">root</span> D:\01_Workspace\Project\github\zp\SpringNotes\spring-security\spring-shiro\src\main\webapp\views;</div><div class="line">            <span class="comment">#过期30天，静态文件不怎么更新，过期可以设大一点，如果频繁更新，则可以设置得小一点。</span></div><div class="line">            <span class="attribute">expires</span> <span class="number">30d</span>;</div><div class="line">        &#125;</div><div class="line">    </div><div class="line">        <span class="comment">#设定查看Nginx状态的地址</span></div><div class="line">        <span class="attribute">location</span> /NginxStatus &#123;</div><div class="line">            <span class="attribute">stub_status</span>           <span class="literal">on</span>;</div><div class="line">            <span class="attribute">access_log</span>            <span class="literal">on</span>;</div><div class="line">            <span class="attribute">auth_basic</span>            <span class="string">"NginxStatus"</span>;</div><div class="line">            <span class="attribute">auth_basic_user_file</span>  conf/htpasswd;</div><div class="line">        &#125;</div><div class="line">    </div><div class="line">        <span class="comment">#禁止访问 .htxxx 文件</span></div><div class="line">        <span class="attribute">location</span> <span class="regexp">~ /\.ht</span> &#123;</div><div class="line">            <span class="attribute">deny</span> all;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">#错误处理页面（可选择性配置）</span></div><div class="line">        <span class="comment">#error_page   404              /404.html;</span></div><div class="line">        <span class="comment">#error_page   500 502 503 504  /50x.html;</span></div><div class="line">        <span class="comment">#location = /50x.html &#123;</span></div><div class="line">        <span class="comment">#    root   html;</span></div><div class="line">        <span class="comment">#&#125;</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>需要注意的如果想要使用域名<code>www.helloworld.com</code>需要在<code>C:\Windows\System32\drivers\etc\host</code>中添加一条DNS记录，如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">127.0.0.1 www.helloworld.com</div></pre></td></tr></table></figure>
+<p>当然也可以不用上面配的域名访问，可以使用<code>IP |localhost</code>访问。</p>
+<h4 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a>负载均衡</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line"><span class="section">http</span> &#123;</div><div class="line">    <span class="comment">#设定mime类型,类型由mime.type文件定义</span></div><div class="line">    <span class="attribute">include</span>       /etc/nginx/mime.types;</div><div class="line">    <span class="attribute">default_type</span>  application/octet-stream;</div><div class="line">    <span class="comment">#设定日志格式</span></div><div class="line">    <span class="attribute">access_log</span>    /var/log/nginx/access.log;</div><div class="line"></div><div class="line">    <span class="comment">#设定负载均衡的服务器列表</span></div><div class="line">    <span class="attribute">upstream</span> load_balance_server &#123;</div><div class="line">        <span class="comment">#weigth参数表示权值，权值越高被分配到的几率越大</span></div><div class="line">        <span class="attribute">server</span> <span class="number">192.168.1.11:80</span>   weight=<span class="number">5</span>;</div><div class="line">        <span class="attribute">server</span> <span class="number">192.168.1.12:80</span>   weight=<span class="number">1</span>;</div><div class="line">        <span class="attribute">server</span> <span class="number">192.168.1.13:80</span>   weight=<span class="number">6</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">   <span class="comment">#HTTP服务器</span></div><div class="line">   <span class="section">server</span> &#123;</div><div class="line">        <span class="comment">#侦听80端口</span></div><div class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</div><div class="line">        </div><div class="line">        <span class="comment">#定义使用www.xx.com访问</span></div><div class="line">        <span class="attribute">server_name</span>  www.helloworld.com;</div><div class="line"></div><div class="line">        <span class="comment">#对所有请求进行负载均衡请求</span></div><div class="line">        <span class="attribute">location</span> / &#123;</div><div class="line">            <span class="attribute">root</span>        /root;                 <span class="comment">#定义服务器的默认网站根目录位置</span></div><div class="line">            <span class="attribute">index</span>       index.html index.htm;  <span class="comment">#定义首页索引文件的名称</span></div><div class="line">            <span class="attribute">proxy_pass</span>  http://load_balance_server ;<span class="comment">#请求转向load_balance_server 定义的服务器列表</span></div><div class="line"></div><div class="line">            <span class="comment">#以下是一些反向代理的配置(可选择性配置)</span></div><div class="line">            <span class="comment">#proxy_redirect off;</span></div><div class="line">            <span class="attribute">proxy_set_header</span> Host <span class="variable">$host</span>;</div><div class="line">            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</div><div class="line">            <span class="comment">#后端的Web服务器可以通过X-Forwarded-For获取用户真实IP</span></div><div class="line">            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$remote_addr</span>;</div><div class="line">            <span class="attribute">proxy_connect_timeout</span> <span class="number">90</span>;          <span class="comment">#nginx跟后端服务器连接超时时间(代理连接超时)</span></div><div class="line">            <span class="attribute">proxy_send_timeout</span> <span class="number">90</span>;             <span class="comment">#后端服务器数据回传时间(代理发送超时)</span></div><div class="line">            <span class="attribute">proxy_read_timeout</span> <span class="number">90</span>;             <span class="comment">#连接成功后，后端服务器响应时间(代理接收超时)</span></div><div class="line">            <span class="attribute">proxy_buffer_size</span> <span class="number">4k</span>;              <span class="comment">#设置代理服务器（nginx）保存用户头信息的缓冲区大小</span></div><div class="line">            <span class="attribute">proxy_buffers</span> <span class="number">4</span> <span class="number">32k</span>;               <span class="comment">#proxy_buffers缓冲区，网页平均在32k以下的话，这样设置</span></div><div class="line">            <span class="attribute">proxy_busy_buffers_size</span> <span class="number">64k</span>;       <span class="comment">#高负荷下缓冲大小（proxy_buffers*2）</span></div><div class="line">            <span class="attribute">proxy_temp_file_write_size</span> <span class="number">64k</span>;    <span class="comment">#设定缓存文件夹大小，大于这个值，将从upstream服务器传</span></div><div class="line">            </div><div class="line">            <span class="attribute">client_max_body_size</span> <span class="number">10m</span>;          <span class="comment">#允许客户端请求的最大单文件字节数</span></div><div class="line">            <span class="attribute">client_body_buffer_size</span> <span class="number">128k</span>;      <span class="comment">#缓冲区代理缓冲用户端请求的最大字节数</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="多个webapp的配置"><a href="#多个webapp的配置" class="headerlink" title="多个webapp的配置"></a>多个webapp的配置</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line"><span class="section">http</span> &#123;</div><div class="line">    <span class="comment">#此处省略一些基本配置</span></div><div class="line">    </div><div class="line">    <span class="attribute">upstream</span> product_server&#123;</div><div class="line">        <span class="attribute">server</span> www.helloworld.com:<span class="number">8081</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="attribute">upstream</span> admin_server&#123;</div><div class="line">        <span class="attribute">server</span> www.helloworld.com:<span class="number">8082</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="attribute">upstream</span> finance_server&#123;</div><div class="line">        <span class="attribute">server</span> www.helloworld.com:<span class="number">8083</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="section">server</span> &#123;</div><div class="line">        <span class="comment">#此处省略一些基本配置</span></div><div class="line">        <span class="comment">#默认指向product的server</span></div><div class="line">        <span class="attribute">location</span> / &#123;</div><div class="line">            <span class="attribute">proxy_pass</span> http://product_server;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="attribute">location</span> /product/&#123;</div><div class="line">            <span class="attribute">proxy_pass</span> http://product_server;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="attribute">location</span> /admin/ &#123;</div><div class="line">            <span class="attribute">proxy_pass</span> http://admin_server;</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="attribute">location</span> /finance/ &#123;</div><div class="line">            <span class="attribute">proxy_pass</span> http://finance_server;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="静态站点"><a href="#静态站点" class="headerlink" title="静态站点"></a>静态站点</h4><figure class="highlight nginx"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</div><div class="line"></div><div class="line"><span class="section">events</span> &#123;</div><div class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="section">http</span> &#123;</div><div class="line">    <span class="attribute">include</span>       mime.types;</div><div class="line">    <span class="attribute">default_type</span>  application/octet-stream;</div><div class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</div><div class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</div><div class="line"></div><div class="line">    <span class="attribute">gzip</span> <span class="literal">on</span>;</div><div class="line">    <span class="attribute">gzip_types</span> text/plain application/x-javascript text/css application/xml text/javascript application/javascript image/jpeg image/gif image/png;</div><div class="line">    <span class="attribute">gzip_vary</span> <span class="literal">on</span>;</div><div class="line"></div><div class="line">    <span class="section">server</span> &#123;</div><div class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</div><div class="line">        <span class="attribute">server_name</span>  static.zp.cn;</div><div class="line"></div><div class="line">        <span class="attribute">location</span> / &#123;</div><div class="line">            <span class="attribute">root</span> /app/dist;</div><div class="line">            <span class="attribute">index</span> index.html;</div><div class="line">            <span class="comment">#转发任何请求到 index.html</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><h4 id="location相关"><a href="#location相关" class="headerlink" title="location相关"></a>location相关</h4><h5 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h5><ol>
+<li>location [ = | ~ | ~* | ^~ ]  uri { … }</li>
+<li>location @name { … }</li>
+</ol>
+<p>即有两种配置方案：</p>
+<ol>
+<li>前缀 + uri （字符串/正则表达式）</li>
+<li>@    + name</li>
+</ol>
+<p>前缀的含义：</p>
+<ul>
+<li>= ： 精确匹配</li>
+<li>~ ： 大小写敏感</li>
+<li>~* ：忽略大小写</li>
+<li>^~ ：只匹配以uri开头的地址</li>
+<li>@ ：内部服务跳转</li>
+</ul>
+<h5 id="基础知识-1"><a href="#基础知识-1" class="headerlink" title="基础知识"></a>基础知识</h5><ul>
+<li>location 是在 server 块中配置。</li>
+<li>可以根据不同的 URI 使用不同的配置（location 中配置），来处理不同的请求。</li>
+<li>location 是有顺序的，会被第一个匹配的location 处理。</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://zhuanlan.zhihu.com/p/22544725" target="_blank" rel="external">什么是Web服务器（server）？</a></li>
+<li><a href="https://www.zhihu.com/question/20096067" target="_blank" rel="external">Web服务器与应用服务器的区别是什么？</a></li>
+<li><a href="https://www.zhihu.com/question/24723688" target="_blank" rel="external">反向代理为何叫反向代理</a></li>
+<li><a href="http://wiki.jikexueyuan.com/project/nginx/overwise.html" target="_blank" rel="external">什么是Nginx</a></li>
+<li><a href="https://www.cnblogs.com/jingmoxukong/p/5945200.html" target="_blank" rel="external">Nginx简易教程</a></li>
+<li><a href="https://segmentfault.com/a/1190000009651161" target="_blank" rel="external">Nginx 的 Location 从零开始配置</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="jinhy wechat" style="width: 200px; max-width: 100%;"/>
+    <div>微信扫一扫，欢迎关注我的订阅号~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创，您的支持将鼓励我继续创作，去追寻星空~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="jinhy WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="jinhy Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/WEB服务器/" rel="tag"># WEB服务器</a>
+          
+            <a href="/tags/Nginx/" rel="tag"># Nginx</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/18/hello-world/" rel="prev" title="welcome to jinhy's club">
+                welcome to jinhy's club <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDk1NS83NTA0"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="jinhy" />
+          <p class="site-author-name" itemprop="name">jinhy</p>
+           
+              <p class="site-description motion-element" itemprop="description">言念君子 温其如玉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="mailto:603132073@qq.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://weibo.com/5198936239/profile?topnav=1&wvr=6&is_all=1" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      weibo
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+        
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=300 src="//music.163.com/outchain/player?type=0&id=927072148&auto=1&height=430"></iframe>
+        <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=654572&auto=1&height=66"></iframe> -->
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关于本文的内容及顺序"><span class="nav-number">1.1.</span> <span class="nav-text">关于本文的内容及顺序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引子一-Web服务器"><span class="nav-number">2.</span> <span class="nav-text">引子一 Web服务器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是服务器（server）？"><span class="nav-number">2.1.</span> <span class="nav-text">什么是服务器（server）？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Web-Server？"><span class="nav-number">2.2.</span> <span class="nav-text">什么是Web Server？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引子二-Web服务器与应用服务器的区别"><span class="nav-number">3.</span> <span class="nav-text">引子二 Web服务器与应用服务器的区别</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引子三-正向代理和反向代理"><span class="nav-number">4.</span> <span class="nav-text">引子三 正向代理和反向代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#正向代理"><span class="nav-number">4.1.</span> <span class="nav-text">正向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向代理"><span class="nav-number">4.2.</span> <span class="nav-text">反向代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">4.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是Nginx？"><span class="nav-number">5.</span> <span class="nav-text">什么是Nginx？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx入门"><span class="nav-number">6.</span> <span class="nav-text">Nginx入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">6.1.</span> <span class="nav-text">安装</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从源代码编译Nginx"><span class="nav-number">6.1.1.</span> <span class="nav-text">从源代码编译Nginx</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Window安装"><span class="nav-number">6.1.2.</span> <span class="nav-text">Window安装</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#命令"><span class="nav-number">6.2.</span> <span class="nav-text">命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置说明"><span class="nav-number">6.3.</span> <span class="nav-text">配置说明</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#反向代理-1"><span class="nav-number">6.3.1.</span> <span class="nav-text">反向代理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#负载均衡"><span class="nav-number">6.3.2.</span> <span class="nav-text">负载均衡</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多个webapp的配置"><span class="nav-number">6.3.3.</span> <span class="nav-text">多个webapp的配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#静态站点"><span class="nav-number">6.3.4.</span> <span class="nav-text">静态站点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础知识"><span class="nav-number">6.4.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#location相关"><span class="nav-number">6.4.1.</span> <span class="nav-text">location相关</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#格式"><span class="nav-number">6.4.1.1.</span> <span class="nav-text">格式</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#基础知识-1"><span class="nav-number">6.4.1.2.</span> <span class="nav-text">基础知识</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">7.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinhy</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
