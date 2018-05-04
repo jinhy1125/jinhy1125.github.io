@@ -102,15 +102,15 @@
 <meta property="og:site_name" content="jinhy&#39;s club">
 <meta property="og:description" content="背景Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。 关于本文的内容及顺序最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/05/03/Nginx/images/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2018/05/03/Nginx/images/v2-816f7595d80b7ef36bf958764a873cba_hd.jpg">
-<meta property="og:image" content="http://yoursite.com/2018/05/03/Nginx/images/480c1c45d2565e2f92fd930d25b73a18_r.jpg">
-<meta property="og:image" content="http://yoursite.com/2018/05/03/Nginx/images/1240">
-<meta property="og:updated_time" content="2018-05-03T10:31:34.182Z">
+<meta property="og:image" content="http://yoursite.com/uploads/nginx/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/uploads/nginx/v2-816f7595d80b7ef36bf958764a873cba_hd.jpg">
+<meta property="og:image" content="http://yoursite.com/uploads/nginx/480c1c45d2565e2f92fd930d25b73a18_r.jpg">
+<meta property="og:image" content="http://yoursite.com/uploads/nginx/1240">
+<meta property="og:updated_time" content="2018-05-04T02:08:26.771Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Nginx入门">
 <meta name="twitter:description" content="背景Nginx一直就比较想去学习了解，最开始是之前搭梯子的时候听说过通过Nginx反向代理访问Google，后来的话项目中也开始用起了Nginx来做负载均衡。但是自己一直拖延着没有去学，这次知识地图认定觉得想把它考过，顺便督促自己把这个东西弄明白。 关于本文的内容及顺序最开始我理所当然的去看Nginx的官网或者资料，里面介绍他是Web服务器，可是我对这个感觉没什么概念，因为我知道Tomcat就是服">
-<meta name="twitter:image" content="http://yoursite.com/2018/05/03/Nginx/images/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
+<meta name="twitter:image" content="http://yoursite.com/uploads/nginx/v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg">
 
 
 
@@ -428,19 +428,19 @@
 <p>在上面是故事中，王老师扮演了一个非常关键的角色，即<strong>代理</strong>，也可以说是正向代理。王老师代替A同学办这件事，这个过程中真正借钱的人是谁，马云是不知道的，这点非常关键。</p>
 <p>我们常说的代理也就是指正向代理。在正向代理的过程中，它隐藏了真实的请求客户端，服务端不知道真实的客户端是谁，客户端请求的服务都被代理服务器代替来请求。</p>
 <p>某些科学上网工具扮演的就是典型的正向代理角色。用浏览器访问<code>http://www.google.com</code>是时，被残忍的block，于是你可以在国外搭建一台代理服务器，让代理帮我去请求google.com，代理把请求返回的相应结构返回给我。</p>
-<p><img src="images\v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg" alt="正向代理"></p>
+<p><img src="\uploads\nginx\v2-07ededff1d415c1fa2db3fd89378eda0_hd.jpg" alt="正向代理"></p>
 <h3 id="反向代理"><a href="#反向代理" class="headerlink" title="反向代理"></a>反向代理</h3><p>大家都有过这样的经历吧，拨打10086的客服电话，一个地区的客服有几个或者几十个，你永远不会关心电话另一头的客服到底是哪一个，你关心的只是问题能不能得到专业的解答，而你总能得到解答。这里的10086总机号码就是我们说的<strong>反向代理</strong>。客户不知道真正提供服务的人是谁。</p>
 <p>反向代理隐藏了真实的服务端，当我们请求<code>http://wwww.baidu.com</code>的时候，就像拨打10086一样，背后可能有成千上万台服务器为我们服务，但是具体是哪一台，你并不需要知道，你只需要知道反向代理服务器是谁就好了，<code>http://www.baidu.com</code>就是我们的反向代理服务器，反向代理服务器会帮我们把请求转发到真是的服务器那里去。Nginx就是性能非常好的反向代理服务器，用来做负载均衡。</p>
-<p><img src="images\v2-816f7595d80b7ef36bf958764a873cba_hd.jpg" alt="反向代理"></p>
+<p><img src="\uploads\nginx\v2-816f7595d80b7ef36bf958764a873cba_hd.jpg" alt="反向代理"></p>
 <h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>两者的区别在于代理的对象不一样</p>
 <ul>
 <li>正向代理，代理的对象是客户端</li>
 <li>反向代理，代理的对象是服务端</li>
 </ul>
 <p>模型如下：</p>
-<p><img src="images\480c1c45d2565e2f92fd930d25b73a18_r.jpg" alt="模型"></p>
+<p><img src="\uploads\nginx\480c1c45d2565e2f92fd930d25b73a18_r.jpg" alt="模型"></p>
 <p>又看到一个比较全面的图，也贴上吧。。。</p>
-<p><img src="images\1240" alt="正向代理和反向代理"></p>
+<p><img src="\uploads\nginx\1240" alt="正向代理和反向代理"></p>
 <h2 id="什么是Nginx？"><a href="#什么是Nginx？" class="headerlink" title="什么是Nginx？"></a>什么是Nginx？</h2><p>Nginx是俄罗斯人Igor Sysoev编写的十分轻量级的HTTP服务器（Web服务器）。它是一个高性能的HTTP和反向代理服务器，同时也是一个IMAP/POP3/SMTP代理服务器。</p>
 <p>Nginx以<code>事件驱动</code>的方式编写，所以有非常好的性能，同时也是一个非常高效的反向代理、负载均衡。其拥有匹配Lighttpd的性能，同时还没有Lighttpd的内存泄漏问题。</p>
 <p>Nginx因为它的稳定性、丰富的模块库、灵活的配置和低系统资源的消耗而闻名。对proxy和rewrite模块支持的很彻底，还支持mod_fcgi、ssl、vhosts，适合用来做mongrel clusters的前端HTTP响应。</p>
