@@ -102,7 +102,7 @@
 <meta property="og:site_name" content="jinhy&#39;s club">
 <meta property="og:description" content="背景最近想做Spring Boot的总结，众所周知，Spring有不少自己的注解，Spring Boot更甚，它的口号是做到零配置，目的也是为了避免配置零散到多个地方的场景。那么如果想要深入了解Spring Boot的话势必要知道它读取到注解后做哪些处理，这些后面会总结。这篇文章算是前提吧。顺势而为。 什么是注解官方定义如下：  注解是一系列元数据，它提供数据用来解释程序代码，但是注解并非是所解释">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-05-07T10:32:46.547Z">
+<meta property="og:updated_time" content="2018-05-07T10:34:49.942Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java注解小总结">
 <meta name="twitter:description" content="背景最近想做Spring Boot的总结，众所周知，Spring有不少自己的注解，Spring Boot更甚，它的口号是做到零配置，目的也是为了避免配置零散到多个地方的场景。那么如果想要深入了解Spring Boot的话势必要知道它读取到注解后做哪些处理，这些后面会总结。这篇文章算是前提吧。顺势而为。 什么是注解官方定义如下：  注解是一系列元数据，它提供数据用来解释程序代码，但是注解并非是所解释">
@@ -393,9 +393,8 @@
 <h2 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h2><p>官方定义如下：</p>
 <blockquote>
 <p>注解是一系列<code>元数据</code>，它<code>提供数据</code>用来<code>解释程序代码</code>，但是注解<code>并非是所解释的代码本身的一部分</code>。注解<code>对于代码的运行效果没有直接影响</code>。</p>
-<p>注解有许多用处，主要如下：<br>- 提供信息给编译器： 编译器可以利用注解来探测错误和警告信息<br>- 编译阶段时的处理： 软件工具可以用来利用注解信息来生成代码、Html文档或者做其它相应处理。<br>- 运行时的处理： 某些注解可以在程序运行的时候接受代码的提取</p>
+<p>注解有许多用处，主要如下：<br>- 提供信息给编译器： 编译器可以利用注解来探测错误和警告信息<br>- 编译阶段时的处理： 软件工具可以用来利用注解信息来生成代码、Html文档或者做其它相应处理。<br>- 运行时的处理： 某些注解可以在程序运行的时候接受代码的提取<br><a id="more"></a><br>有些小伙伴可能一看到元数据就已经有些懵了，这里先简单介绍一下<a href="https://zh.wikipedia.org/wiki/元数据" target="_blank" rel="external">元数据</a>：元数据即描述数据的数据。比如说我们描述windows系统里面的一个文件，它是由很多属性定义的，像大小、编码、权限等等，这些就叫做它的元数据。如果想更深入理解可以看下wiki，说的实在是太太太详细了。</p>
 </blockquote>
-<p>有些小伙伴可能一看到元数据就已经有些懵了，这里先简单介绍一下<a href="https://zh.wikipedia.org/wiki/元数据" target="_blank" rel="external">元数据</a>：元数据即描述数据的数据。比如说我们描述windows系统里面的一个文件，它是由很多属性定义的，像大小、编码、权限等等，这些就叫做它的元数据。如果想更深入理解可以看下wiki，说的实在是太太太详细了。</p>
 <p>回到主题，对于官方定义我觉得可以一句话一句话的理解，参照我定义中标出的关键语句。</p>
 <ul>
 <li><p>元数据</p>
