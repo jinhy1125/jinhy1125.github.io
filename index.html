@@ -273,6 +273,259 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/07/Java注解小总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinhy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jinhy's club">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/05/07/Java注解小总结/" itemprop="url">Java注解小总结</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-07T18:31:38+08:00">
+                2018-05-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/" itemprop="url" rel="index">
+                    <span itemprop="name">学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/Java/注解/" itemprop="url" rel="index">
+                    <span itemprop="name">注解</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>最近想做Spring Boot的总结，众所周知，Spring有不少自己的注解，Spring Boot更甚，它的口号是做到零配置，目的也是为了避免配置零散到多个地方的场景。那么如果想要深入了解Spring Boot的话势必要知道它读取到注解后做哪些处理，这些后面会总结。这篇文章算是前提吧。顺势而为。</p>
+<h2 id="什么是注解"><a href="#什么是注解" class="headerlink" title="什么是注解"></a>什么是注解</h2><p>官方定义如下：</p>
+<blockquote>
+<p>注解是一系列<code>元数据</code>，它<code>提供数据</code>用来<code>解释程序代码</code>，但是注解<code>并非是所解释的代码本身的一部分</code>。注解<code>对于代码的运行效果没有直接影响</code>。</p>
+<p>注解有许多用处，主要如下：<br>- 提供信息给编译器： 编译器可以利用注解来探测错误和警告信息<br>- 编译阶段时的处理： 软件工具可以用来利用注解信息来生成代码、Html文档或者做其它相应处理。<br>- 运行时的处理： 某些注解可以在程序运行的时候接受代码的提取</p>
+</blockquote>
+<p>有些小伙伴可能一看到元数据就已经有些懵了，这里先简单介绍一下<a href="https://zh.wikipedia.org/wiki/元数据" target="_blank" rel="external">元数据</a>：元数据即描述数据的数据。比如说我们描述windows系统里面的一个文件，它是由很多属性定义的，像大小、编码、权限等等，这些就叫做它的元数据。如果想更深入理解可以看下wiki，说的实在是太太太详细了。</p>
+<p>回到主题，对于官方定义我觉得可以一句话一句话的理解，参照我定义中标出的关键语句。</p>
+<ul>
+<li><p>元数据</p>
+<p>根据我上面元数据粗浅的解释，我们得出注解也是用来定义或者描述某个东西的。</p>
+</li>
+<li><p>提供数据</p>
+<p>元数据可以定义并提供一些我们想要传达的数据。</p>
+</li>
+<li><p>解释程序代码</p>
+<p>程序代码就是被定义或者描述的那个主体。</p>
+</li>
+<li><p>并非是所解释的代码本身的一部分</p>
+<p>这句话其实跟上面的<code>解释</code>是同样的意思，我们可以想一想我们还有其他解释程序代码的方式比如说<code>注释</code>，这样就很容易理解它们并不是代码的一部分这个含义。</p>
+</li>
+<li><p>对于代码的运行效果没有直接影响</p>
+<p>我猜测大家大部分对这句话抱有怀疑。会想“不是这样吧，只有我类上标明<code>@service</code>后才能被Spring扫描到呀，怎么就说对代码没有影响了？”。其实换句话说可能大家就能更好的理解了，<strong>注解自身不会对代码产生任何影响，但是我们可以读取注解及其提供的数据来编写代码来对系统造成影响</strong>。还是上面的例子，<code>@service</code>本身没有什么作用，但是Spring框架中有部分代码会依据它加载实例，所以我们看结果是它产生了影响。</p>
+</li>
+</ul>
+<p>最后三句话是简单说了一下注解可应用的主要场景，分别对应了不同的三个周期，周期的问题下面篇幅说明。</p>
+<h2 id="注解的定义"><a href="#注解的定义" class="headerlink" title="注解的定义"></a>注解的定义</h2><p>定义注解其实很简单，就跟定义一个类或者接口区别不是很大，只是把<code>class | interface</code>换为<code>@interface</code>。</p>
+<p>同时定义注解我们还需要引入另一个概念，就是<code>元注解</code>。</p>
+<h3 id="元注解"><a href="#元注解" class="headerlink" title="元注解"></a>元注解</h3><p>大家估计现在看名字就能猜出<code>元注解</code>的作用了，就是修饰描述注解的注解。</p>
+<p>元注解有以下五种。</p>
+<h4 id="Retention"><a href="#Retention" class="headerlink" title="@Retention"></a>@Retention</h4><p>Retention翻译过来是保留的意思。它描述的就是被修饰注解的生命周期。</p>
+<p>它的取值如下，这里我们可以跟上一节里面它的主要用途来对应着看：</p>
+<ul>
+<li><p>RetentionPolicy.SOURCE</p>
+<p>被修饰注解只能在源码阶段保留，不会进入编译器进行的编译期。</p>
+</li>
+<li><p>RetentionPolicy.CLASS</p>
+<p>被修饰注解只能保留到编译期，不会加载到JVM。</p>
+</li>
+<li><p>RetentionPolicy.RUNTIME</p>
+<p>注解可以保留到程序运行的时候，它会被加载进入到 JVM 中，所以在程序运行时可以获取到它们。</p>
+</li>
+</ul>
+<h4 id="Documented"><a href="#Documented" class="headerlink" title="@Documented"></a>@Documented</h4><p>其作用是能够将注解中的元素包含到 Javadoc 中去。</p>
+<h4 id="Target"><a href="#Target" class="headerlink" title="@Target"></a>@Target</h4><p>其作用是指定被修饰注解可用到哪些地方。</p>
+<p>取值如下：</p>
+<ul>
+<li><p>ElementType.ANNOTATION_TYPE</p>
+<p>可以给一个注解进行注解</p>
+</li>
+<li><p>ElementType.CONSTRUCTOR</p>
+<p>可以给构造方法进行注解</p>
+</li>
+<li><p>ElementType.FIELD</p>
+<p>可以给属性进行注解</p>
+</li>
+<li><p>ElementType.LOCAL_VARIABLE</p>
+<p>可以给局部变量进行注解</p>
+</li>
+<li><p>ElementType.METHOD</p>
+<p>可以给方法进行注解</p>
+</li>
+<li><p>ElementType.PACKAGE</p>
+<p>可以给一个包进行注解</p>
+</li>
+<li><p>ElementType.PARAMETER</p>
+<p>可以给一个方法内的参数进行注解</p>
+</li>
+<li><p>ElementType.TYPE</p>
+<p>可以给一个类型进行注解，比如类、接口、枚举</p>
+</li>
+</ul>
+<h4 id="Inherited"><a href="#Inherited" class="headerlink" title="@Inherited"></a>@Inherited</h4><p>继承的意思。如果超类被某个注解修饰，而这个注解被<code>@Inherited</code>修饰，那么继承超类的子类默认也被这个注解修饰。</p>
+<h4 id="Repeatable"><a href="#Repeatable" class="headerlink" title="@Repeatable"></a>@Repeatable</h4><p>其为Java 1.8版本新引入元注解。场景可以举例说明，比如各个公司都有职位设置，而且也有兼职的这种制度，如果我们定义一个注解为<code>@Role</code>，属性是职位那么可能就有<code>@Role(&quot;manager&quot;)</code>或者<code>@Role(&quot;developer&quot;)</code>，而我们修饰的那个人可能就是一个做开发的经理。</p>
+<p>代码举例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@interface</span> Roles &#123;</div><div class="line">    Role[]  value();</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@Repeatable</span>(Roles.class)</div><div class="line"><span class="meta">@interface</span> Role&#123;</div><div class="line">    <span class="function">String <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"></div><div class="line"><span class="meta">@Role</span>(<span class="string">"manager"</span>)</div><div class="line"><span class="meta">@Role</span>(<span class="string">"developer"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SuperMan</span></span>&#123;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="注解的属性"><a href="#注解的属性" class="headerlink" title="注解的属性"></a>注解的属性</h3><p>在注解的定义中我们知道注解是可以提供数据的，而这个方式就是定义属性。</p>
+<p>这个属性的定义跟我们正常的认知不太一样，它采用的是定义无参无方法体类似定义方法的方式来定义的。其中方法名就是属性的名字，而返回值就是属性的类型。</p>
+<p>而且可以通过<code>default</code>关键字来定义默认值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Target</span>(ElementType.TYPE)</div><div class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</div><div class="line"><span class="keyword">public</span> <span class="meta">@interface</span> MyAnnotation &#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">id</span><span class="params">()</span> <span class="keyword">default</span> -1</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">msg</span><span class="params">()</span> <span class="keyword">default</span> "hello world"</span>;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如上所示，我们定义了一个名为<code>MyAnnotation</code>的注解，它包含两个属性且都有默认值。</p>
+<p>可以这样使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MyAnnotation</span>(id=<span class="number">1</span>, msg=<span class="string">"msg"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> class <span class="title">MyClass</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">//因为注解中有默认值，所以我们也可以不自定义属性值</span></div><div class="line"><span class="meta">@MyAnnotation</span>()</div><div class="line"><span class="function"><span class="keyword">public</span> class <span class="title">MyClass</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">//因为有些注解可能只有一个value属性,那直接引号就可以</span></div><div class="line"><span class="meta">@OnlyValue</span>(<span class="string">"bye"</span>)</div><div class="line"><span class="function"><span class="keyword">public</span> class <span class="title">MyClass</span><span class="params">()</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="comment">//有些注解一个属性都没有，那就完全可以不带括号</span></div><div class="line"><span class="meta">@NoAttribute</span></div><div class="line"><span class="function"><span class="keyword">public</span> class <span class="title">MyClass</span><span class="params">()</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h2 id="如何获取注解"><a href="#如何获取注解" class="headerlink" title="如何获取注解"></a>如何获取注解</h2><p>我们知道注解的生命周期主要有三种，而我们大部分用的都是<code>Runtime</code>。不同周期获取注解的方式是不一样的，我们这版先主要讨论<code>Runtime</code>期间的获取，其他的以后再扩充。</p>
+<p>而运行期间进行获取的方式主要是反射（有没有其他方式没有研究过，如果知道其他的方式大家可以留言补充）。作为开发人员的明显看代码更形象。如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@MyAnnotation</span>(msg=<span class="string">"hello"</span>)</div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</div><div class="line">    </div><div class="line">    <span class="meta">@Check</span>(value=<span class="string">"hi"</span>)</div><div class="line">    <span class="keyword">int</span> a;</div><div class="line"></div><div class="line">    <span class="meta">@Perform</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testMethod</span><span class="params">()</span></span>&#123;&#125;</div><div class="line"></div><div class="line">    <span class="meta">@SuppressWarnings</span>(<span class="string">"deprecation"</span>)</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</div><div class="line">        Hero hero = <span class="keyword">new</span> Hero();</div><div class="line">        hero.say();</div><div class="line">        hero.speak();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</div><div class="line">        <span class="keyword">boolean</span> hasAnnotation = Test.class.isAnnotationPresent(MyAnnotation.class);</div><div class="line">        <span class="keyword">if</span> ( hasAnnotation ) &#123;</div><div class="line">            MyAnnotation testAnnotation = Test.class.getAnnotation(MyAnnotation.class);</div><div class="line">            <span class="comment">//获取类的注解</span></div><div class="line">            System.out.println(<span class="string">"id:"</span>+testAnnotation.id());</div><div class="line">            System.out.println(<span class="string">"msg:"</span>+testAnnotation.msg());</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            Field a = Test.class.getDeclaredField(<span class="string">"a"</span>);</div><div class="line">            a.setAccessible(<span class="keyword">true</span>);</div><div class="line">            <span class="comment">//获取一个成员变量上的注解</span></div><div class="line">            Check check = a.getAnnotation(Check.class);</div><div class="line"></div><div class="line">            <span class="keyword">if</span> ( check != <span class="keyword">null</span> ) &#123;</div><div class="line">                System.out.println(<span class="string">"check value:"</span>+check.value());</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            Method testMethod = Test.class.getDeclaredMethod(<span class="string">"testMethod"</span>);</div><div class="line">            <span class="keyword">if</span> ( testMethod != <span class="keyword">null</span> ) &#123;</div><div class="line">                <span class="comment">// 获取方法中的注解</span></div><div class="line">                Annotation[] ans = testMethod.getAnnotations();</div><div class="line">                <span class="keyword">for</span>( <span class="keyword">int</span> i = <span class="number">0</span>;i &lt; ans.length;i++) &#123;</div><div class="line">                    System.out.println(<span class="string">"method testMethod annotation:"</span>+ans[i].annotationType().getSimpleName());</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</div><div class="line">            <span class="comment">// TODO Auto-generated catch block</span></div><div class="line">            e.printStackTrace();</div><div class="line">            System.out.println(e.getMessage());</div><div class="line">        &#125; </div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://zh.wikipedia.org/wiki/元数据" target="_blank" rel="external">维基：元数据定义</a></li>
+<li><a href="https://blog.csdn.net/briblue/article/details/73824058#t1" target="_blank" rel="external">Java注解</a></li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/06/架构是什么/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1706,161 +1959,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/19/你该认清你的恐惧而不是目标/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="jinhy">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/uploads/avatar.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="jinhy's club">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/19/你该认清你的恐惧而不是目标/" itemprop="url">你该认清你的恐惧而不是目标</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-19T13:36:34+08:00">
-                2017-09-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/认知/" itemprop="url" rel="index">
-                    <span itemprop="name">认知</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>折磨我们的往往是想象，而不是真实。</p>
-<p>easy choices , hard life .<br>hard choices , easy life .</p>
-<p>用三张纸写一些东西来引发自己的思考。</p>
-<ol>
-<li>想到自己可能会遇到的问题<ol>
-<li>列举出自己可能会遇到的最糟糕的十个情况</li>
-<li>列举出怎么干大概可以预防着十件事情发生</li>
-<li>列举出如果这些糟糕事情真的发生怎么补救</li>
-</ol>
-</li>
-<li>问自己，一次尝试或者一部分成功会给自己带来什么？</li>
-<li>想一下，如果这件事我们一直不做，会给自己带来什么影响。6个月后会怎样？12个月呢？3年呢？</li>
-</ol>
-<p><a href="http://www.bilibili.com/video/av13279600/" target="_blank" rel="external">网易云课堂：你该认清你的恐惧而不是目标</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1911,7 +2009,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -1922,7 +2020,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">12</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1933,7 +2031,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
