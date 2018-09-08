@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Spring,Spring Boot,Java," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="背景想把Spring（这篇文章的Spring比较狭义，其实主要说的是Spring IOC）看透一些，所以读了一下Spring &amp;amp; Spring Boot的源码。读的过程中记了一些认为比较重要的点和一些想法，但是太过发散和零碎，所以打算整理一下。 整篇文章的主题或者说想要解决的问题如下：  Spring是为了解决什么问题而产生的？采用了什么思想？ Spring为了解决问题是怎么做的？核心概念">
+<meta name="keywords" content="Spring,Spring Boot,Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring &amp; Spring Boot">
+<meta property="og:url" content="http://yoursite.com/2017/10/01/Spring & Spring Boot/index.html">
+<meta property="og:site_name" content="jinhy&#39;s club">
+<meta property="og:description" content="背景想把Spring（这篇文章的Spring比较狭义，其实主要说的是Spring IOC）看透一些，所以读了一下Spring &amp;amp; Spring Boot的源码。读的过程中记了一些认为比较重要的点和一些想法，但是太过发散和零碎，所以打算整理一下。 整篇文章的主题或者说想要解决的问题如下：  Spring是为了解决什么问题而产生的？采用了什么思想？ Spring为了解决问题是怎么做的？核心概念">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://a.photo/images/2018/09/08/autoconfigure.png">
+<meta property="og:updated_time" content="2018-09-08T07:04:28.434Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Spring &amp; Spring Boot">
+<meta name="twitter:description" content="背景想把Spring（这篇文章的Spring比较狭义，其实主要说的是Spring IOC）看透一些，所以读了一下Spring &amp;amp; Spring Boot的源码。读的过程中记了一些认为比较重要的点和一些想法，但是太过发散和零碎，所以打算整理一下。 整篇文章的主题或者说想要解决的问题如下：  Spring是为了解决什么问题而产生的？采用了什么思想？ Spring为了解决问题是怎么做的？核心概念">
+<meta name="twitter:image" content="https://a.photo/images/2018/09/08/autoconfigure.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/01/Spring & Spring Boot/"/>
+
+
+
+
+
+  <title>Spring & Spring Boot | jinhy's club</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">jinhy's club</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/01/Spring & Spring Boot/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="jinhy">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="jinhy's club">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring & Spring Boot</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-01T18:31:38+08:00">
+                2017-10-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/" itemprop="url" rel="index">
+                    <span itemprop="name">学习</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/学习/Java/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>想把Spring（这篇文章的Spring比较狭义，其实主要说的是Spring IOC）看透一些，所以读了一下Spring &amp; Spring Boot的源码。读的过程中记了一些认为比较重要的点和一些想法，但是太过发散和零碎，所以打算整理一下。</p>
+<p>整篇文章的主题或者说想要解决的问题如下：</p>
+<ul>
+<li>Spring是为了解决什么问题而产生的？采用了什么思想？</li>
+<li>Spring为了解决问题是怎么做的？核心概念是什么？设计思想是什么样的？</li>
+<li>Spring Boot是怎么更进一步简洁化的？</li>
+<li>Spring的思想及其实现能给我们带来什么意义？</li>
+</ul>
+<p>这篇文章类似总纲形式的，会外接一些其他的文章。<br><a id="more"></a></p>
+<h2 id="Spring带来的新局面"><a href="#Spring带来的新局面" class="headerlink" title="Spring带来的新局面"></a>Spring带来的新局面</h2><p>我们要盖一间房子，一个房子有基本的门、窗、各种家具（床、椅子等）。假如我们是原始人，只能就地取材，随便砍一棵树就拿来加工做成门，窗，家具等。代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment"> * <span class="doctag">@author</span> jinhy</span></div><div class="line"><span class="comment"> * <span class="doctag">@Date</span> 2018-05-15</span></div><div class="line"><span class="comment"> */</span></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hourse</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的墙</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> BasicWall basicWall;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的门</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> BasicDoor basicDoor;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的窗</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> BasicWindow basicWindow;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hourse</span><span class="params">(BasicDoor basicDoor, BasicWindow basicWindow, BasicWall basicWall)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.basicDoor = basicDoor;</div><div class="line">        <span class="keyword">this</span>.basicWindow = basicWindow;</div><div class="line">        <span class="keyword">this</span>.basicWall = basicWall;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>作为原始人的我们用身边的素材搭建了我们的房子。恰好还特别合适住的非常舒服。但是有一天刮了一阵大风，吹坏了我们的门。等风过去我们赶紧修吧，发现根本找不到合适的门了，我们要换门得顺便调整一下我们的墙和窗户。可真是费死劲了。</p>
+<p>大家苦思冥想，突然有个人说他是从未来穿越过来的，他说未来的房子门坏了随便去个地方重新买一个就好了，因为所有制造的门都是符合一个标准的，都能装到我们的房子上。大家一想靠谱呀。于是一起协商做了一个标准。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hourse</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的墙</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> IWall wall;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的门</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> IDoor door;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 就地取材的窗</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> IWindow window;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Hourse</span><span class="params">(IDoor door, IWindow window, IWall wall)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.door = door;</div><div class="line">        <span class="keyword">this</span>.window = window;</div><div class="line">        <span class="keyword">this</span>.wall = wall;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这样我们就达成了门坏了随便换，不管木头的石头的还是啥样的，只要是符合标准的随便装。</p>
+<p>其实软件开发历史的前期也遇到了这样的问题，稍微一个需求的变化就对软件的整体产生很大的印象，一个小的软件是很容易修改的，但是如果我们想要构建一个庞大的系统，那这样的一个变化可能将使我们大厦倾倒。</p>
+<p>所以我们得到的经验就是我们不应该依赖具体的实现，而是依赖它的抽象（标准）。这条原则叫做<code>依赖倒置</code>。概念如下：</p>
+<blockquote>
+<p>高层模块不应该依赖低层模块，二者都应该依赖其抽象；抽象不应该依赖细节；细节应该依赖抽象。</p>
+</blockquote>
+<p>这样解决了我很大的问题，但是还是有问题——我们发现不管如何，我们最底层还是需要依赖具体的实现，标准或者说是抽象是不可能替代具体实现。就像我们上面说的盖房子，我们不可能拿一个门的图纸来替代门呀。这样也就会导致我们在某些地方还是需要去创建对象，new Object（）。那这又依赖了具体的实现了呀，哎~</p>
+<p>TODO：还需要补充代码！这样更能体现一下。</p>
+<p>又经过一番苦思冥想，我们发现无论如何都无法把生成具体实现的过程剔除，但是我们可不可以把这个过程从我们的业务流程中拿出去呢？我们定义的流程中依赖的还是抽象，但是我们真正的运行起业务流程的时候拿到的而是具体的实现。具体实现从哪拿？从一个跟业务不想关的仓库中拿。</p>
+<p>这就是Spring IOC所给我们提供的东西。</p>
+<h2 id="Spring是如何做到的"><a href="#Spring是如何做到的" class="headerlink" title="Spring是如何做到的"></a>Spring是如何做到的</h2><p>通过上面的章节，我们理解了Spring的出现是为了解决我们软件开发中的什么问题。</p>
+<p>其实怎么解决的我们基本上也已经理解了，就是以仓库为核心当我们的业务代码需要某个具体实现的时候，我们把这个实现提供给程序，这个过程在Spring里叫做<code>依赖注入</code>。</p>
+<p>下面我们来具体看一下Spring是怎么设计并实现的。（<del>开始我是把所有相关重点流程的代码都贴在了文章里面，然后突然感觉这种方式是不是不对，大家谁没有源码看啊。换一种方式，然后大家可以根据兴趣自己去查看源码。</del>）</p>
+<p>以流程的方式。而且不会特别在意代码层次，主要是为了表现我们可能关注的一些点。</p>
+<h3 id="主流程"><a href="#主流程" class="headerlink" title="主流程"></a>主流程</h3><p>这是我们整个业务流程，程序开始前创建了应用上下文，然后我们能从中获取我们的实例。</p>
+<p>创建应用上下文对应的代码类似：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">new</span> ClassPathXMLApplicationContext(<span class="string">"applicationContext.xml"</span>);</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: Start</div><div class="line">e=&gt;end: End</div><div class="line">new application=&gt;operation: 创建应用上下文</div><div class="line">get singleton=&gt;operation: 获取实例</div><div class="line">create beanfactory=&gt;subroutine: 创建bean工厂</div><div class="line">load beandefinitions=&gt;operation: 加载Bean定义</div><div class="line"></div><div class="line">st-&gt;new application-&gt;get singleton-&gt;e</div></pre></td></tr></table></figure>
+<p>概念解释：</p>
+<ul>
+<li>什么是应用上下文？</li>
+<li>ApplicationContext和BeanFactory比有什么区别？</li>
+</ul>
+<h3 id="创建应用上下文"><a href="#创建应用上下文" class="headerlink" title="创建应用上下文"></a>创建应用上下文</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">st=&gt;start: Start</div><div class="line">e=&gt;end: End</div><div class="line">create beanfactory=&gt;operation: 创建bean工厂</div><div class="line">load beandefinitions=&gt;operation: 加载Bean定义</div><div class="line">prepare beanfactory=&gt;operation: 给bean工厂设置一些东西（如类加载器、Bean的后置处理器等）</div><div class="line">invoke beanfactorypostprocessess=&gt;operation: 调用bean工厂的后置处理器</div><div class="line">register beanpostprocessors=&gt;operation: 注册Bean的后置处理器</div><div class="line">onrefresh=&gt;operation: 初始化其他特殊bean</div><div class="line">finishbeanfactoryinitialization=&gt;operation: 实例化剩余单例</div><div class="line"></div><div class="line"></div><div class="line">st-&gt;create beanfactory-&gt;load beandefinitions-&gt;prepare beanfactory-&gt;invoke beanfactorypostprocessess-&gt;register beanpostprocessors-&gt;onrefresh-&gt;finishbeanfactoryinitialization-&gt;e</div></pre></td></tr></table></figure>
+<p>概念解释：</p>
+<ul>
+<li>我们可以从哪里获取Bean定义（Bean Denifition）?</li>
+<li>我们用什么处理Bean定义？</li>
+<li>Spring中的后置处理器是什么？</li>
+<li>实例化Bean的时机？</li>
+</ul>
+<h2 id="Spring-Boot"><a href="#Spring-Boot" class="headerlink" title="Spring Boot"></a>Spring Boot</h2><h3 id="Spring-Boot要解决的问题"><a href="#Spring-Boot要解决的问题" class="headerlink" title="Spring Boot要解决的问题"></a>Spring Boot要解决的问题</h3><p>我们都知道基于Spring的应用总是需要配置大量的东西。</p>
+<p>比如当我们使用Spring MVC的时候，我们需要配置组件扫描，配置dispatcher servlet，配置一个view resolver和一些相关的jar等等。当我们使用Hibernete/JPA的时候，我们需要配置一个数据源，entity manager factory（实体管理工厂），事物管理等。这些都是繁琐的。</p>
+<p>而Spring Boot就是帮我们解决这些东西的。让我们开发项目的时候花更少的时间在这些配置上。</p>
+<h3 id="如何做到自动配置"><a href="#如何做到自动配置" class="headerlink" title="如何做到自动配置"></a>如何做到自动配置</h3><p>所有的自动配置逻辑都是在<code>spring-boot-autoconfigure.jar</code>中实现。如图</p>
+<p>!<img src="https://a.photo/images/2018/09/08/autoconfigure.png" alt="autoconfigure.png"></p>
+<p>这个jar包中嗨哟一个比较关键的文件是<code>/META-INF/spring.factories</code>，这个文件列出了在EnableAutoConfiguration键下启用的所有自动配置类。一些比较常见的自动配置类如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">org.springframework.boot.autoconfigure.EnableAutoConfiguration=\</div><div class="line">org.springframework.boot.autoconfigure.aop.AopAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.MessageSourceAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.PropertyPlaceholderAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jdbc.JndiDataSourceAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jdbc.XADataSourceAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.security.SecurityAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.security.SecurityFilterAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.web.DispatcherServletAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.web.EmbeddedServletContainerAutoConfiguration,\</div><div class="line">org.springframework.boot.autoconfigure.web.ErrorMvcAutoConfiguration,\</div></pre></td></tr></table></figure>
+<p>通常，所有的自动配置类会查看在类路径中的其他类。如果类路径中有特定的类，则通过自动配置为其配置功能。这时通常会使用<code>@ConditionalOnClass</code>、<code>ConditionalOnMissingBean</code>等来帮助达成这样的效果。</p>
+<p>所以比如发现classpath里面有hibernate的jar包且没有相关的bean出现，它就帮你配置一个数据源或者发现了Spring MVC的jar包就帮你配置好Dispatcher Sevlet，这是多么美妙的事情。</p>
+<p>当然我们可能想要看看我们符合了哪些条件，框架为我们做了哪些自动配置，我们可以使用两种方式实现：</p>
+<ul>
+<li><p>打开Debug模式</p>
+<p>添加或者修改配置<code>logging.level.org.springframework: DEBUG</code></p>
+</li>
+<li><p>使用Spring Boot Actuator</p>
+<p>引入相应的jar包然后浏览器访问查看。</p>
+</li>
+</ul>
+<h3 id="解决复杂的依赖关系"><a href="#解决复杂的依赖关系" class="headerlink" title="解决复杂的依赖关系"></a>解决复杂的依赖关系</h3><p>我们之前的Spring项目除了需要配许多配置，还要整理我们复杂的依赖，考虑版本及各种兼容性。</p>
+<p>而现在Spring Boot都帮尽可能的减少这方面的工作量，这里它是如何做到的呢？</p>
+<p>我们谈一谈Starters。</p>
+<p>Starters是一系列的便捷的依赖的描述，它提供一站式的服务，使用为了实现某种目的的Starter，它会帮你引入相应的jar包，并可以搭配auto-configuration为你减少很大的工作量。</p>
+<p>比如我们最基础的Spring Boot Starter Web。依赖这个Starter就会帮你完成对Spring、Web MVC、Jackson、Tomcat、Logback等必要的引入和配置。</p>
+<p>其他的最长使用的还有spring-boot-starter-test用来单元测试和集成测试，还有spring-boot-starter-jdbc提供传统的JDBC服务等。</p>
+<p>其实到这很明显可以知道自动配置和starters不是强依赖的。Startes就是方便我们引入一些依赖。而我们完全可以自由的引入，然后一些Bean的定义和properties会由Auto-Configuration提供。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+      <div>
+        <div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/wechat-qcode.jpg" alt="jinhy wechat" style="width: 200px; max-width: 100%;"/>
+    <div>微信扫一扫，欢迎关注我的订阅号~</div>
+</div>
+
+      </div>
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创，您的支持将鼓励我继续创作，去追寻星空~</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>Donate</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="jinhy WeChat Pay"/>
+        <p>WeChat Pay</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="jinhy Alipay"/>
+        <p>Alipay</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+            <a href="/tags/Spring-Boot/" rel="tag"># Spring Boot</a>
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/28/安详/" rel="next" title="安详">
+                <i class="fa fa-chevron-left"></i> 安详
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/02/05/redis探索/" rel="prev" title="Redis探索">
+                Redis探索 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMDk1NS83NTA0"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="jinhy" />
+          <p class="site-author-name" itemprop="name">jinhy</p>
+           
+              <p class="site-description motion-element" itemprop="description">言念君子 温其如玉</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="mailto:603132073@qq.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://weibo.com/5198936239/profile?topnav=1&wvr=6&is_all=1" target="_blank" title="weibo">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                    
+                      weibo
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+        
+        <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=300 src="//music.163.com/outchain/player?type=0&id=927072148&auto=1&height=430"></iframe>
+        <!-- <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=654572&auto=1&height=66"></iframe> -->
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring带来的新局面"><span class="nav-number">2.</span> <span class="nav-text">Spring带来的新局面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring是如何做到的"><span class="nav-number">3.</span> <span class="nav-text">Spring是如何做到的</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主流程"><span class="nav-number">3.1.</span> <span class="nav-text">主流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建应用上下文"><span class="nav-number">3.2.</span> <span class="nav-text">创建应用上下文</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Boot"><span class="nav-number">4.</span> <span class="nav-text">Spring Boot</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Spring-Boot要解决的问题"><span class="nav-number">4.1.</span> <span class="nav-text">Spring Boot要解决的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#如何做到自动配置"><span class="nav-number">4.2.</span> <span class="nav-text">如何做到自动配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解决复杂的依赖关系"><span class="nav-number">4.3.</span> <span class="nav-text">解决复杂的依赖关系</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">jinhy</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three.min.js"></script>
+
+  
+  <script type="text/javascript" src="/lib/three/three-waves.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
